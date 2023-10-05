@@ -13,9 +13,15 @@ if (configuration["AOAI_API_KEY"] == null || configuration["AOAI_API_URL"] == nu
     return;
 }
 
+if (configuration["CSI_API_KEY"] == null || configuration["CSI_API_URL"] == null)
+{
+    Console.WriteLine("Please provide CSI_API_KEY and CSI_API_URL in your user secrets.");
+    return;
+}
+
 int maxInputLength = 50;
 IbisAiClientBuilder clientBuilder =
-    new IbisAiClientBuilder(configuration["AOAI_API_KEY"]!, configuration["AOAI_API_URL"]!);
+    new IbisAiClientBuilder(configuration["AOAI_API_KEY"]!, configuration["AOAI_API_URL"]!, configuration["CSI_API_URL"]!, configuration["CSI_API_KEY"]!);
 OpenAIClient client = clientBuilder.InitializeClient();
 
 // Display options to user
