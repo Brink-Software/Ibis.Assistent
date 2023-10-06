@@ -21,12 +21,12 @@ if (configuration["CSI_API_KEY"] == null || configuration["CSI_API_URL"] == null
 
 int maxInputLength = 50;
 IbisAiClientBuilder clientBuilder =
-    new IbisAiClientBuilder(configuration["AOAI_API_KEY"]!, configuration["AOAI_API_URL"]!, configuration["CSI_API_URL"]!, configuration["CSI_API_KEY"]!);
+    new IbisAiClientBuilder(configuration["AOAI_API_KEY"]!, configuration["AOAI_API_URL"]!,
+        configuration["CSI_API_URL"]!, configuration["CSI_API_KEY"]!);
 OpenAIClient client = clientBuilder.InitializeClient();
 
 // Display options to user
-string[] options = new string[]
-{
+string[] options = {
     "test-gpt-deployment",
 };
 
@@ -58,35 +58,36 @@ if (args.Length > 0 && int.TryParse(args[0], out int parsedLength))
     maxInputLength = parsedLength;
 }
 
-
 while (true)
 {
-    Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-    Console.WriteLine("Prompt: ");
-    Console.WriteLine("-----------------------------------");
+    Utils.PrintWithColor("Prompt: ", ConsoleColor.Blue);
+    Utils.PrintWithColor("-----------------------------------", ConsoleColor.Blue);
     string? userInput = Console.ReadLine();
     if (string.IsNullOrEmpty(userInput))
     {
-        Console.WriteLine("Input is empty. Please provide some input.");
+        Utils.PrintWithColor("Input is empty. Please provide some input.", ConsoleColor.Yellow);
         continue;
     }
 
     if (userInput.Length > maxInputLength)
     {
-        Console.WriteLine($"Input is too long. Please enter input less than or equal to {maxInputLength} characters.");
+        Utils.PrintWithColor(
+            $"Input is too long. Please enter input less than or equal to {maxInputLength} characters.",
+            ConsoleColor.Yellow);
         continue;
     }
 
-    Console.WriteLine("-----------------------------------");
-    // If input is valid
-    Response<Completions> completionsResponse = await client.GetCompletionsAsync(userChoice, userInput);
-    Console.WriteLine("\nResponse from OpenAI:");
-    Console.WriteLine("-----------------------------------");
-    foreach (Choice? completion in completionsResponse.Value.Choices)
+    Utils.PrintWithColor("-----------------------------------", ConsoleColor.Blue);
+    // If input is valid1
+    Response<ChatCompletions> completionsResponse = await client.GetChatCompletionsAsync(userChoice,
+        clientBuilder.GetChatCompletionOptions(
+            "You are a helpful assistant that answers questions about the Ibis Product line.", userInput));
+    Utils.PrintWithColor("\nResponse from OpenAI:", ConsoleColor.Green);
+    Utils.PrintWithColor("-----------------------------------", ConsoleColor.Green);
+    foreach (ChatChoice? completion in completionsResponse.Value.Choices)
     {
-        Console.WriteLine(completion.Text);
+        Utils.PrintWithColor(completion.Message.Content, ConsoleColor.Green);
     }
-
-    Console.WriteLine("-----------------------------------");
+    Utils.PrintWithColor("-----------------------------------", ConsoleColor.Green);
     userInput = string.Empty;
 }

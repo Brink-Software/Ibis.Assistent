@@ -38,7 +38,9 @@ Configure the application's `appsettings.json` (or use user secrets) with the ne
 ```json
 {
   "AOAI_API_URL": "YOUR_AZURE_OPENAI_ENDPOINT",
-  "AOAI_API_KEY": "YOUR_AZURE_OPENAI_KEY"
+  "AOAI_API_KEY": "YOUR_AZURE_OPENAI_KEY",
+  "CSI_API_KEY": "YOUR_AZURE_SEARCH_KEY",
+  "CSI_API_URL": "YOUR_AZURE_SEARCH_ENDPOINT"
 }
 ```
 
